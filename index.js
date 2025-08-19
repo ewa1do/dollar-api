@@ -3,6 +3,9 @@ import path from "path";
 import express from "express";
 import sqlite3 from "sqlite3";
 import { fileURLToPath } from "url";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const port = 8080;
@@ -103,11 +106,10 @@ app.get("/cron-status", (req, res) => {
     });
 });
 
-// Configurar cron job para health check cada 5 minutos
 cron.schedule(
     "* * * * *",
     async () => {
-        console.log("Ejecutando health check...");
+        console.log("executing health check...");
         await healthCheck();
     },
     {
@@ -139,7 +141,6 @@ app.get("/history", (req, res) => {
     });
 });
 
-// Health check endpoint (necesario)
 app.get("/health", (req, res) => {
     res.status(200).json({
         status: "ok",
