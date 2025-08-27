@@ -76,7 +76,7 @@ async function healthCheck() {
 
 function setupCronJob() {
     const job = cron.schedule(
-        "15 9 * * *",
+        "0 8,9,12,15,15.5,16,18,20,22 * * *",
         async () => {
             try {
                 await checkDollarRate();
@@ -90,7 +90,9 @@ function setupCronJob() {
         },
     );
 
-    console.log("Cron job settled to executed daily at 9:15 AM");
+    console.log(
+        "Cron job settled to executed daily at 8am, 9am, 12pm, 3pm, 3:30pm, 4pm, 6pm, 8pm, 10pm",
+    );
     return job;
 }
 
@@ -100,14 +102,14 @@ cronJob.getNextRun();
 app.get("/cron-status", (req, res) => {
     res.json({
         nextExecution: cronJob.getNextRun().toISOString(),
-        cronExpression: "15 9 * * *",
+        cronExpression: "0 8,9,12,15,15.5,16,18,20,22 * * *",
         timezone: "America/Caracas",
-        description: "Ejecuta diariamente a las 9:15 AM",
+        description: "Ejecuta diariamente a las 8am, 9am, 12pm, 3pm, 3:30pm, 4pm, 6pm, 8pm, 10pm",
     });
 });
 
 cron.schedule(
-    "* * * * *",
+    "*/3 * * * *",
     async () => {
         console.log("executing health check...");
         await healthCheck();
